@@ -71,32 +71,59 @@ namespace SistemaLanchonete
         // Evento chamado quando o botão btnFinalizarPedido é clicado
         private void btnFinalizarPedido_Click(object sender, EventArgs e)
         {
-            // Calcula o troco subtraindo o total do pedido do valor recebido
-            double troco = Convert.ToDouble(txtValorRecebido.Text) - pedido.TotalPedido;
+            double troco = 0; // Declara a variável troco fora dos blocos if/else
 
-            // Exibe o troco no TextBox txtTroco formatado como moeda
-            txtTroco.Text = troco.ToString("N2");
+            if (string.IsNullOrEmpty(txtValorRecebido.Text))
+            {
+                MessageBox.Show("Digite o valor pago pelo cliente", "Preencha o valor Pago", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return; // Sai do método se o campo estiver vazio
+            }
 
-            // Exibe uma mensagem de pedido realizado com sucesso
-            MessageBox.Show("Pedido realizado com sucesso!", "Finalizar Pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                troco = Convert.ToDouble(txtValorRecebido.Text) - pedido.TotalPedido;
 
-            // Limpa os itens do pedido
-            pedido.LimparItens();
+                if (troco < 0)
+                {
+                    MessageBox.Show("Valor pago insuficiente. O cliente deve pagar um valor maior.", "Valor Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; // Sai do método se o troco for negativo ou seja, para o programa imediatamente!
+                }
 
-            // Limpa a ListBox de lanches
-            lbLaches.Items.Clear();
+                txtTroco.Text = troco.ToString("N2"); // Exibe o troco no TextBox
 
-            // Reseta os TextBoxes de valor do pedido, valor recebido e troco
-            txtValorPedido.ResetText();
-            txtValorRecebido.ResetText();
-            txtTroco.ResetText();
+                // Exibe uma mensagem de pedido realizado com sucesso
+                MessageBox.Show("Pedido realizado com sucesso!", "Finalizar Pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // Reseta o contador de pedidos e o total do pedido
-            pedido.Cont = 1;
-            pedido.TotalPedido = 0;
+                // Limpa os itens do pedido
+                pedido.LimparItens();
 
-            // Atualiza o total do lanche
-            AtualizarTotalLanche();
+                // Limpa a ListBox de lanches
+                lbLaches.Items.Clear();
+
+                // Reseta os TextBoxes de valor do pedido, valor recebido e troco
+                txtValorPedido.ResetText();
+                txtValorRecebido.ResetText();
+                txtTroco.ResetText();
+
+                // Reseta o contador de pedidos e o total do pedido
+                pedido.Cont = 1;
+                pedido.TotalPedido = 0;
+
+                // Atualiza o total do lanche
+                AtualizarTotalLanche();
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Valor pago inválido. Digite um número.", "Erro de Valor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (OverflowException)
+            {
+                MessageBox.Show("Valor pago muito grande. Digite um valor menor.", "Erro de Valor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocorreu um erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Método para adicionar um item ao pedido
