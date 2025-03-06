@@ -56,6 +56,7 @@ namespace SistemaLanchonete
             {
                 // Adiciona o item ao pedido chamando o método AdicionarItemPedido do formulário principal
                 ((frmPrincipal)CheckBox.FindForm()).AdicionarItemPedido(this);
+                NumericUpDown.Value = 1;
             }
         }
 
