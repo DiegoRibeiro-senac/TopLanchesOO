@@ -26,16 +26,16 @@ namespace SistemaLanchonete
         private void InicializarItensCardapio()
         {
             // Cria instâncias de ItemCardapio e adiciona à lista itensCardapio
-            itensCardapio.Add(new ItemCardapio("Hamburger", Convert.ToDouble(txtUniHamburger.Text), cbHamburger, numHamburger, txtTotalHamburger, txtUniHamburger));
-            itensCardapio.Add(new ItemCardapio("Ovo", Convert.ToDouble(txtUniOvo.Text), cbOvo, numOvo, txtTotalOvo, txtUniOvo));
-            itensCardapio.Add(new ItemCardapio("Presunto", Convert.ToDouble(txtUniPresunto.Text), cbPresunto, numPresunto, txtTotalPresunto, txtUniPresunto));
-            itensCardapio.Add(new ItemCardapio("Mussarela", Convert.ToDouble(txtUniMussarela.Text), cbMussarela, numMussarela, txtTotalMussarela, txtUniMussarela));
-            itensCardapio.Add(new ItemCardapio("Bacon", Convert.ToDouble(txtUniBacon.Text), cbBacon, numBacon, txtTotalBacon, txtUniBacon));
-            itensCardapio.Add(new ItemCardapio("Frango", Convert.ToDouble(txtUniFrango.Text), cbFrango, numFrango, txtTotalFrango, txtUniFrango));
-            itensCardapio.Add(new ItemCardapio("Alface", Convert.ToDouble(txtUniAlface.Text), cbAlface, numAlface, txtTotalAlface, txtUniAlface));
-            itensCardapio.Add(new ItemCardapio("Tomate", Convert.ToDouble(txtUniTomate.Text), cbTomate, numTomate, txtTotalTomate, txtUniTomate));
-            itensCardapio.Add(new ItemCardapio("Milho", Convert.ToDouble(txtUniMilho.Text), cbMilho, numMilho, txtTotalMilho, txtUniMilho));
-            itensCardapio.Add(new ItemCardapio("Ervilha", Convert.ToDouble(txtUniErvilha.Text), cbErvilha, numErvilha, txtTotalErvilha, txtUniErvilha));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniHamburger.Text), cbHamburger, numHamburger, txtTotalHamburger, txtUniHamburger));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniOvo.Text), cbOvo, numOvo, txtTotalOvo, txtUniOvo));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniPresunto.Text), cbPresunto, numPresunto, txtTotalPresunto, txtUniPresunto));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniMussarela.Text), cbMussarela, numMussarela, txtTotalMussarela, txtUniMussarela));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniBacon.Text), cbBacon, numBacon, txtTotalBacon, txtUniBacon));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniFrango.Text), cbFrango, numFrango, txtTotalFrango, txtUniFrango));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniAlface.Text), cbAlface, numAlface, txtTotalAlface, txtUniAlface));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniTomate.Text), cbTomate, numTomate, txtTotalTomate, txtUniTomate));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniMilho.Text), cbMilho, numMilho, txtTotalMilho, txtUniMilho));
+            itensCardapio.Add(new ItemCardapio(Convert.ToDouble(txtUniErvilha.Text), cbErvilha, numErvilha, txtTotalErvilha, txtUniErvilha));
         }
 
         // Método para atualizar o total do lanche exibido na interface
@@ -71,25 +71,33 @@ namespace SistemaLanchonete
         // Evento chamado quando o botão btnFinalizarPedido é clicado
         private void btnFinalizarPedido_Click(object sender, EventArgs e)
         {
-            double troco = 0; // Declara a variável troco fora dos blocos if/else
+            // Declara a variável troco fora dos blocos if/else
+            double troco = 0;
 
+            // Verifica se o campo de valor recebido está vazio
             if (string.IsNullOrEmpty(txtValorRecebido.Text))
             {
+                // Exibe uma mensagem pedindo para o usuário digitar o valor pago
                 MessageBox.Show("Digite o valor pago pelo cliente", "Preencha o valor Pago", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return; // Sai do método se o campo estiver vazio
             }
 
+            // Bloco try...catch para tratar exceções durante o cálculo do troco
             try
             {
+                // Calcula o troco subtraindo o total do pedido do valor recebido
                 troco = Convert.ToDouble(txtValorRecebido.Text) - pedido.TotalPedido;
 
+                // Verifica se o troco é negativo (valor pago insuficiente)
                 if (troco < 0)
                 {
+                    // Exibe uma mensagem informando que o valor pago é insuficiente
                     MessageBox.Show("Valor pago insuficiente. O cliente deve pagar um valor maior.", "Valor Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return; // Sai do método se o troco for negativo ou seja, para o programa imediatamente!
+                    return; // Sai do método se o troco for negativo
                 }
 
-                txtTroco.Text = troco.ToString("N2"); // Exibe o troco no TextBox
+                // Exibe o troco no TextBox txtTroco formatado como moeda
+                txtTroco.Text = troco.ToString("N2");
 
                 // Exibe uma mensagem de pedido realizado com sucesso
                 MessageBox.Show("Pedido realizado com sucesso!", "Finalizar Pedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -112,14 +120,17 @@ namespace SistemaLanchonete
                 // Atualiza o total do lanche
                 AtualizarTotalLanche();
             }
+            // Trata a exceção FormatException (valor pago inválido)
             catch (FormatException)
             {
                 MessageBox.Show("Valor pago inválido. Digite um número.", "Erro de Valor", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            // Trata a exceção OverflowException (valor pago muito grande)
             catch (OverflowException)
             {
                 MessageBox.Show("Valor pago muito grande. Digite um valor menor.", "Erro de Valor", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            // Trata qualquer outra exceção inesperada
             catch (Exception ex)
             {
                 MessageBox.Show($"Ocorreu um erro inesperado: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);

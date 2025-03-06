@@ -6,7 +6,6 @@ namespace SistemaLanchonete
     public class ItemCardapio
     {
         // Propriedades da classe para armazenar informações do item do cardápio
-        public string Nome { get; set; } // Nome do item (ex: Hamburger, Ovo, etc.)
         public double PrecoUnitario { get; set; } // Preço unitário do item
         public int Quantidade { get; set; } // Quantidade do item (pode não ser usada diretamente aqui, mas em outros contextos)
         public CheckBox CheckBox { get; set; } // CheckBox associado ao item na interface gráfica
@@ -15,10 +14,10 @@ namespace SistemaLanchonete
         public TextBox TextBoxPrecoUnitario { get; set; } // TextBox para exibir o preço unitário do item
 
         // Construtor da classe ItemCardapio
-        public ItemCardapio(string nome, double precoUnitario, CheckBox checkBox, NumericUpDown numericUpDown, TextBox textBoxTotal, TextBox textBoxPrecoUnitario)
+        public ItemCardapio(double precoUnitario, CheckBox checkBox, NumericUpDown numericUpDown, TextBox textBoxTotal, TextBox textBoxPrecoUnitario)
         {
             // Inicializa as propriedades com os valores passados como parâmetro
-            Nome = nome;
+
             PrecoUnitario = precoUnitario;
             CheckBox = checkBox;
             NumericUpDown = numericUpDown;
